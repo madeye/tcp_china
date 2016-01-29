@@ -232,7 +232,7 @@ static struct tcp_congestion_ops tcp_china = {
 	.ssthresh	= tcp_china_ssthresh,
 	.cong_avoid	= tcp_china_cong_avoid,
 	.min_cwnd	= tcp_reno_min_cwnd,
-    .pkts_acked = tcp_china_rtt_calc,
+        .pkts_acked     = tcp_china_rtt_calc,
 
 	.owner		= THIS_MODULE,
 	.name		= "china",
