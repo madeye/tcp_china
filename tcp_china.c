@@ -4,7 +4,7 @@
  *
  * This is based on the congestion detection/avoidance scheme described in
  *   King R., Baraniuk, R., and Riedi, R.
- *   "TCP-China: An Adaptive and Fair Rapid Increase Rule for Scalable TCP"
+ *   "TCP-Africa: An Adaptive and Fair Rapid Increase Rule for Scalable TCP"
  *   Presented at INFOCOM 2005, and published in:
  *   INFOCOM 2005. 24th Annual Joint Conference of the IEEE Computer and
  *   Communications Societies. Proceedings IEEE
@@ -13,10 +13,13 @@
  *   The paper is available from:
  *     http://www.spin.rice.edu/PDF/Infocom05web.pdf
  *
- * TCP-China is a delay-sensitive congestion avoidance algorithm for TCP that
+ * TCP-Africa is a delay-sensitive congestion avoidance algorithm for TCP that
  * allows for scalable, aggressive behavior in large underutilized links, yet
  * falls back to the more conservative TCP-Reno algorithm once links become
  * well utilized and congestion is imminent.
+ *
+ * TCP-China is a modification of TCP-Africa that keeps using fast mode all the
+ * time, regardless of fairness.
  *
  */
 
