@@ -22,6 +22,7 @@
 
 #include <linux/mm.h>
 #include <linux/module.h>
+#include <linux/version.h>
 
 #include <net/tcp.h>
 
@@ -165,13 +166,21 @@ static void tcp_china_rtt_calc(struct sock *sk, u32 num_acked, s32 rtt_us)
 	ca->minrtt = minrtt;
 }
 
-static void tcp_china_cong_avoid(struct sock *sk, u32 ack,
-				  u32 acked, u32 in_flight)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 16, 0)
+static void tcp_china_cong_avoid(struct sock *sk, u32 ack, u32 acked,
+                                 u32 in_flight)
+#else
+static void tcp_china_cong_avoid(struct sock *sk, u32 ack, u32 acked)
+#endif
 {
 	struct tcp_sock *tp = tcp_sk(sk);
 	struct china *ca = inet_csk_ca(sk);
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 16, 0)
 	if (!tcp_is_cwnd_limited(sk, in_flight))
+#else
+	if (!tcp_is_cwnd_limited(sk))
+#endif
 		return;
 
 	/* Adjust the cwnd */
@@ -231,8 +240,10 @@ static struct tcp_congestion_ops tcp_china = {
 	.init		= tcp_china_init,
 	.ssthresh	= tcp_china_ssthresh,
 	.cong_avoid	= tcp_china_cong_avoid,
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 15, 0)
 	.min_cwnd	= tcp_reno_min_cwnd,
-        .pkts_acked     = tcp_china_rtt_calc,
+#endif
+	.pkts_acked	= tcp_china_rtt_calc,
 
 	.owner		= THIS_MODULE,
 	.name		= "china",
