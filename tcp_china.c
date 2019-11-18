@@ -239,18 +239,24 @@ static u32 tcp_china_ssthresh(struct sock *sk)
            2U);
 }
 
+static u32 tcp_china_undo_cwnd(struct sock *sk)
+{
+	const struct tcp_sock *tp = tcp_sk(sk);
+
+	return max(tp->snd_cwnd, tp->prior_cwnd);
+}
+
 static struct tcp_congestion_ops tcp_china = {
 	.init		= tcp_china_init,
 	.ssthresh	= tcp_china_ssthresh,
 	.cong_avoid	= tcp_china_cong_avoid,
-#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 15, 0)
-	.min_cwnd	= tcp_reno_min_cwnd,
-#endif
+	.undo_cwnd = tcp_china_undo_cwnd,
 	.pkts_acked	= tcp_china_rtt_calc,
 
 	.owner		= THIS_MODULE,
 	.name		= "china",
 };
+
 
 static int __init tcp_china_register(void)
 {
